@@ -109,7 +109,7 @@ local function solve(a, b, c, d, e)
 end -- returns travel time
 Math.solve = solve
 
-local function bulletcheck(ve, p) -- direction, penetrationdepth
+local function bulletcheck(o, ve, p) -- origin, direction, penetrationdepth
     if p <= 0.01 then
         return false
     end
