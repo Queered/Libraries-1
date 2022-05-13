@@ -109,12 +109,11 @@ local function solve(a, b, c, d, e)
 end -- returns travel time
 Math.solve = solve
 
-local function bulletcheck(o, t, p) -- origin, target, penetrationdepth
+local function bulletcheck(ve, p) -- direction, penetrationdepth
     if p <= 0.01 then
         return false
     end
-    
-    local ve = t - o
+
     local n = ve.Unit
     local h, po = Math.raycast(workspace, Ray.new(o, ve), Math.physicsignore)
 
