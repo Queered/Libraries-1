@@ -15,11 +15,11 @@ local Math = {
     v3 = Vector3.new()
 }
 
-local function solve(a, b, c, d, e)
+function Math.solve(a, b, c, d, e)
     if not a then
         return
     elseif a > -Math.err and a < Math.err then
-        return solve(b, c, d, e)
+        return Math.solve(b, c, d, e)
     end
 
     if e then
@@ -27,11 +27,11 @@ local function solve(a, b, c, d, e)
         local p = (8 * a * c - 3 * b * b) / (8 * a * a)
         local q = (b * b * b + 8 * a * a * d - 4 * a * b * c) / (8 * a * a * a)
         local r = (16 * a * a * b * b * c + 256 * a * a * a * a * e - 3 * a * b * b * b * b - 64 * a * a * a * b * d) / (256 * a * a * a * a * a)
-        local h0, h1, h2 = solve(1, 2 * p, p * p - 4 * r, -q * q)
+        local h0, h1, h2 = Math.solve(1, 2 * p, p * p - 4 * r, -q * q)
         local s = h2 or h0
 
         if s < Math.err then
-            local f0, f1 = solve(1, p, r)
+            local f0, f1 = Math.solve(1, p, r)
 
             if not f1 or f1 < 0 then
                 return
@@ -47,8 +47,8 @@ local function solve(a, b, c, d, e)
             if f > -Math.err and f < Math.err then
                 return k - h, k
             else
-                local r0, r1 = solve(1, h, f)
-                local r2, r3 = solve(1, -h, r / f)
+                local r0, r1 = Math.solve(1, h, f)
+                local r2, r3 = Math.solve(1, -h, r / f)
 
                 if r0 and r2 then
                     return k + r0, k + r1, k + r2, k + r3
@@ -107,9 +107,8 @@ local function solve(a, b, c, d, e)
         return
     end
 end -- returns travel time
-Math.solve = solve
 
-local function bulletcheck(o, ve, p) -- origin, direction, penetrationdepth
+function Math.bulletcheck(o, ve, p) -- origin, direction, penetrationdepth
     if p <= 0.01 then
         return false
     end
@@ -130,12 +129,11 @@ local function bulletcheck(o, ve, p) -- origin, direction, penetrationdepth
             end
         end
 
-        return bulletcheck(po + n / 100, t, p)
+        return Math.bulletcheck(po + n / 100, ve, p)
     end
 
     return true
 end -- returns if the bullet passed
-Math.bulletcheck = bulletcheck
 
 function Math.minpos(t) -- list
     for i, v in pairs(t) do
@@ -155,7 +153,7 @@ function Math.timehit(o, ve, a, t) -- origin, velocity, acceleration, target
 	local st = 0
 	local n = (1 / 0)
 
-    for i, v in pairs({solve(Math.dot(a, a), 3 * Math.dot(a, ve), 2 * (Math.dot(a, d) + Math.dot(ve, ve)), 2 * Math.dot(d, ve))}) do
+    for i, v in pairs({Math.solve(Math.dot(a, a), 3 * Math.dot(a, ve), 2 * (Math.dot(a, d) + Math.dot(ve, ve)), 2 * Math.dot(d, ve))}) do
 		local m = (d + v * ve + v * v / 2 * a).Magnitude
 
 		if st < v and m < n then
@@ -171,7 +169,7 @@ function Math.trajectory(o, a, t, s) -- origin, acceleration, target, speed
 	local ve = t - o
 	local b = -a
 
-    for i, v in pairs({solve(Math.dot(b, b) / 4, 0, Math.dot(b, ve) - s * s, 0, Math.dot(ve, ve))}) do
+    for i, v in pairs({Math.solve(Math.dot(b, b) / 4, 0, Math.dot(b, ve) - s * s, 0, Math.dot(ve, ve))}) do
         if v and v > 0 then
             return b * v / 2 + ve / v, v
         end
@@ -183,7 +181,7 @@ function Math.old_trajectory(pp, pv, pa, tp, tv, ta, s) -- origin, addition offs
     local rv = tv - pv
     local ra = ta - pa
 
-    for i, v in pairs({solve(Math.dot(ra, ra) / 4, Math.dot(ra, rv), Math.dot(ra, rp) + Math.dot(rv, rv) - s * s, 2 * Math.dot(rp, rv), Math.dot(rp, rp))}) do
+    for i, v in pairs({Math.solve(Math.dot(ra, ra) / 4, Math.dot(ra, rv), Math.dot(ra, rp) + Math.dot(rv, rv) - s * s, 2 * Math.dot(rp, rv), Math.dot(rp, rp))}) do
         if v and v > 0 then
             return ra * v / 2 + tv + rp / v, v
         end
@@ -194,7 +192,7 @@ function Math.simple_trajectory(s, a, r) -- speed, acceleration, direction
     local a0 = 4 * Math.dot(r, r)
     local a1 = -4 * (Math.dot(a, r) + s * s)
     local a2 = Math.dot(a, a)
-    local u = Math.minpos({solve(a2, a1, a0)})
+    local u = Math.minpos({Math.solve(a2, a1, a0)})
 
     if u then
         local t = u ^ 0.5
