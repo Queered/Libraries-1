@@ -2,11 +2,11 @@ local heap = {}
 
 function heap.new(less_than)
     -- empty min heap
-    local self = { }
-    
-    function self.less_than(a, b)
-        return a.globalGoal < b.globalGoal
-    end
+    local self = { 
+        less_than = less_than or function(a, b)
+            return a.globalGoal < b.globalGoal
+        end
+    }
     
     function self:empty()
         return self[1] == nil
