@@ -1287,8 +1287,6 @@ end
 function library:Close()
     self.open = not self.open
 
-    services.InputService.OverrideMouseIconBehavior = self.open and Enum.OverrideMouseIconBehavior.ForceHide or self.mousestate
-
     if self.holder then
         self.holder.Visible = self.open
     end
@@ -2712,9 +2710,9 @@ function library:Load(options)
 
     self.cursor = {cursor, cursoroutline}
 
-    services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
-
     utility.connect(services.RunService.RenderStepped, function()
+        services.InputService.OverrideMouseIconBehavior = self.open and Enum.OverrideMouseIconBehavior.ForceHide or self.mousestate
+        
         if self.open then
             local mousepos = services.InputService:GetMouseLocation()
             
