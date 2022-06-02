@@ -2711,21 +2711,21 @@ function library:Load(options)
 
     self.cursor = {cursor, cursoroutline}
 
-    utility.connect(services.RunService.RenderStepped, function()
-        if self.open then
-            local mousepos = services.InputService:GetMouseLocation()
-            
-            cursor.PointA = mousepos
-            cursor.PointB = mousepos + utility.rotatevector2(55) * 20
-            cursor.PointC = mousepos + utility.rotatevector2(10) * 20
+    utility.connect(services.InputService.InputChanged, function(input)
+        if input.UserInputType.Name == "MouseMovement" then
+            if self.open then
+                cursor.PointA = input.Position
+                cursor.PointB = input.Position + utility.rotatevector2(55) * 20
+                cursor.PointC = input.Position + utility.rotatevector2(10) * 20
 
-            cursoroutline.PointA = cursor.PointA
-            cursoroutline.PointB = cursor.PointB
-            cursoroutline.PointC = cursor.PointC
+                cursoroutline.PointA = cursor.PointA
+                cursoroutline.PointB = cursor.PointB
+                cursoroutline.PointC = cursor.PointC
 
-            services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
-        else
-            services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
+                services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
+            else
+                services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
+            end
         end
     end)
 
