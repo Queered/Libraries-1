@@ -2712,11 +2712,13 @@ function library:Load(options)
     self.cursor = {cursor, cursoroutline}
 
     utility.connect(services.InputService.InputChanged, function(input)
-        if input.UserInputType.Name == "MouseMovement" then
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
             if self.open then
-                cursor.PointA = input.Position
-                cursor.PointB = input.Position + utility.rotatevector2(55) * 20
-                cursor.PointC = input.Position + utility.rotatevector2(10) * 20
+                local mousepos = services.InputService:GetMouseLocation()
+                
+                cursor.PointA = mousepos
+                cursor.PointB = mousepos + utility.rotatevector2(55) * 20
+                cursor.PointC = mousepos + utility.rotatevector2(10) * 20
 
                 cursoroutline.PointA = cursor.PointA
                 cursoroutline.PointB = cursor.PointB
