@@ -1398,6 +1398,7 @@ end
 function library:Unload()
     services.ContextActionService:UnbindAction("disablekeyboard")
     services.ContextActionService:UnbindAction("disablemousescroll")
+    services.InputService.OverrideMouseIconBehavior = self.mousestate
 
     if self.open then
         library:Close()
@@ -2711,8 +2712,6 @@ function library:Load(options)
     self.cursor = {cursor, cursoroutline}
 
     utility.connect(services.RunService.RenderStepped, function()
-        services.InputService.OverrideMouseIconBehavior = self.open and Enum.OverrideMouseIconBehavior.ForceHide or self.mousestate
-        
         if self.open then
             local mousepos = services.InputService:GetMouseLocation()
             
@@ -2723,6 +2722,10 @@ function library:Load(options)
             cursoroutline.PointA = cursor.PointA
             cursoroutline.PointB = cursor.PointB
             cursoroutline.PointC = cursor.PointC
+
+            services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
+        else
+            services.InputService.OverrideMouseIconBehavior = self.mousestate
         end
     end)
 
