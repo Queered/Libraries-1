@@ -1110,7 +1110,7 @@ local themes = {
 
 local themeobjects = {}
 
-local library = utility.table({folder = "vozoiduilib", extension = "vozoid", flags = {}, open = true, keybind = Enum.KeyCode.RightShift, mousestate = services.InputService.OverrideMouseIconBehavior, cursor = nil, holder = nil, connections = {}}, true)
+local library = utility.table({folder = "vozoiduilib", extension = "vozoid", flags = {}, open = true, keybind = Enum.KeyCode.RightShift, cursor = nil, holder = nil, connections = {}}, true)
 local decode = (syn and syn.crypt.base64.decode) or (crypt and crypt.base64decode) or base64_decode
 library.gradient = decode("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABuSURBVChTxY9BDoAgDASLGD2ReOYNPsR/+BAfroI7hibe9OYmky2wbUPIOdsXdc1f9WMwppQm+SDGBnUvomAQBH49qzhFEag25869ElzaIXDhD4JGbyoEVxUedN8FKwnfmwhucgKICc+pNB1mZhdCdhsa2ky0FAAAAABJRU5ErkJggg==")
 library.utility = utility
@@ -1398,7 +1398,7 @@ end
 function library:Unload()
     services.ContextActionService:UnbindAction("disablekeyboard")
     services.ContextActionService:UnbindAction("disablemousescroll")
-    services.InputService.OverrideMouseIconBehavior = self.mousestate
+    services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
 
     if self.open then
         library:Close()
@@ -2725,7 +2725,7 @@ function library:Load(options)
 
             services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
         else
-            services.InputService.OverrideMouseIconBehavior = self.mousestate
+            services.InputService.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
         end
     end)
 
