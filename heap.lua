@@ -1,150 +1,167 @@
-local heap = {}
-heap.__index = heap
+-- Heap contains the following functions:
+--		.new(comparator) - Creates a new Heap
+--			comparator: Uses this function to compare values. If none is given, will assume values are numbers and will find smallest value
+--						Comparator should accept two values and return true if a should be further up the heap than b and false otherwise
+--		:Heapify(oldTable, comparator) - Converts a table to a Heap - Will destroy the provided table
+--			comparator: The comparator to pass to Heap.new(comparator)
+--		:Meld(heap1, heap2) - Creates a new Heap using the two provided Heaps
+-- A Heap object has the following functions:
+--		:Insert(newValue) - Adds an element to the Heap
+--		:Pop() - Removes the first element in the Heap and returns it
+--		:Peek() - Returns the first element in the Heap but does not remove it
+--		:GetAsTable() - Returns a table of the elements in the Heap
+--		:Clear() - Removes all values from the Heap
+--		:Print() - Prints out all the values in the Heap
+--		:Size() - Returns the size of the Heap
+--		:Clone() - Creates and returns a new copy of the Heap
 
-local function default_comparison(k1, k2)
-  return k1 < k2
+Heap = {}
+Heap.__index = Heap
+
+local Floor = math.floor
+local function DefaultCompare(a, b)
+	if a > b then
+		return true
+	else
+		return false
+	end
 end
 
-
-function heap:new(comparison)
-  return setmetatable(
-    { length = 0, comparison = comparison or default_comparison }, self)
+local function SiftUp(heap, index)
+	local parentIndex
+	if index ~= 1 then
+		parentIndex = Floor(index/2)
+		if heap.Compare(heap[parentIndex], heap[index]) then
+			heap[parentIndex], heap[index] = heap[index], heap[parentIndex]
+			SiftUp(heap, parentIndex)
+		end
+	end
 end
 
--- info ----------------------------------------------------------------------
-
-function heap:next_key()
-  assert(self.length > 0, "The heap is empty")
-  return self[1].key
+local function SiftDown(heap, index)
+	local leftChildIndex, rightChildIndex, minIndex
+	leftChildIndex = index * 2
+	rightChildIndex = index * 2 + 1
+	if rightChildIndex > #heap then
+		if leftChildIndex > #heap then
+			return
+		else
+			minIndex = leftChildIndex
+		end
+	else
+		if not heap.Compare(heap[leftChildIndex], heap[rightChildIndex]) then
+			minIndex = leftChildIndex
+		else
+			minIndex = rightChildIndex
+		end
+	end
+	
+	if heap.Compare(heap[index], heap[minIndex]) then
+		heap[minIndex], heap[index] = heap[index], heap[minIndex]
+		SiftDown(heap, minIndex)
+	end
 end
 
-
-function heap:empty()
-  return self.length == 0
+function Heap.new(comparator)
+	local newHeap = { }
+	setmetatable(newHeap, Heap)
+	if comparator then
+		newHeap.Compare = comparator
+	else
+		newHeap.Compare = DefaultCompare
+	end
+	
+	return newHeap
 end
 
-
--- insertion and popping -----------------------------------------------------
-
-function heap:insert(k, v)
-  assert(k, "You can't insert nil into a heap")
-
-  local cmp = self.comparison
-
-  -- float the new key up from the bottom of the heap
-  self.length = self.length + 1
-  local new_record = self[self.length]  -- keep the old table to save garbage
-  local child_index = self.length
-  while child_index > 1 do
-    local parent_index = math.floor(child_index / 2)
-    local parent_rec = self[parent_index]
-    if cmp(k, parent_rec.key) then
-      self[child_index] = parent_rec
-    else
-      break
-    end
-    child_index = parent_index
-  end
-  if new_record then
-    new_record.key = k
-    new_record.value = v
-  else
-    new_record = {key = k, value = v}
-  end
-  self[child_index] = new_record
+function Heap:Insert(newValue)
+	table.insert(self, newValue)
+	
+	if #self <= 1 then
+		return
+	end
+	
+	SiftUp(self, #self)
 end
 
-
-function heap:pop()
-  assert(self.length > 0, "The heap is empty")
-
-  local cmp = self.comparison
-
-  -- pop the top of the heap
-  local result = self[1]
-
-  -- push the last element in the heap down from the top
-  local last = self[self.length]
-  local last_key = (last and last.key) or nil
-  -- keep the old record around to save on garbage
-  self[self.length] = self[1]
-  self.length = self.length - 1
-
-  local parent_index = 1
-  while parent_index * 2 <= self.length do
-    local child_index = parent_index * 2
-    if child_index+1 <= self.length and
-       cmp(self[child_index+1].key, self[child_index].key) then
-      child_index = child_index + 1
-    end
-    local child_rec = self[child_index]
-    local child_key = child_rec.key
-    if cmp(last_key, child_key) then
-      break
-    else
-      self[parent_index] = child_rec
-      parent_index = child_index
-    end
-  end
-  self[parent_index] = last
-  return result.key, result.value
+function Heap:Pop()
+	if #self > 0 then
+		local toReturn = self[1]
+		self[1] = self[#self]
+		table.remove(self, #self)
+		if #self > 0 then
+			SiftDown(self, 1)
+		end
+		return toReturn
+	else
+		return nil
+	end
 end
 
-
--- checking ------------------------------------------------------------------
-
-function heap:check()
-  local cmp = self.comparison
-  local i = 1
-  while true do
-    if i*2 > self.length then return true end
-    if cmp(self[i*2].key, self[i].key) then return false end
-    if i*2+1 > self.length then return true end
-    if cmp(self[i*2+1].key, self[i].key) then return false end
-    i = i + 1
-  end
+function Heap:Peek()
+	if #self > 0 then
+		return self[1]
+	else
+		return nil
+	end
 end
 
-
--- pretty printing -----------------------------------------------------------
-
-function heap:write(f, tostring_func)
-  f = f or io.stdout
-  tostring_func = tostring_func or tostring
-
-  local function write_node(lines, i, level, end_spaces)
-    if self.length < 1 then return 0 end
-
-    i = i or 1
-    level = level or 1
-    end_spaces = end_spaces or 0
-    lines[level] = lines[level] or ""
-
-    local my_string = tostring_func(self[i].key)
-
-    local left_child_index = i * 2
-    local left_spaces, right_spaces = 0, 0
-    if left_child_index <= self.length then
-      left_spaces = write_node(lines, left_child_index, level+1, my_string:len())
-    end
-    if left_child_index + 1 <= self.length then
-      right_spaces = write_node(lines, left_child_index + 1, level+1, end_spaces)
-    end
-    lines[level] = lines[level]..string.rep(' ', left_spaces)..
-                   my_string..string.rep(' ', right_spaces + end_spaces)
-    return left_spaces + my_string:len() + right_spaces
-  end
-
-  local lines = {}
-  write_node(lines)
-  for _, l in ipairs(lines) do
-    f:write(l, '\n')
-  end
+function Heap:GetAsTable()
+	local newTable = { }
+	for i = 1, #self do
+		table.insert(newTable, self[i])
+	end
+	return newTable
 end
 
+function Heap:Clear()
+	for k in pairs(self) do
+		self[k] = nil
+	end
+end
 
-------------------------------------------------------------------------------
+function Heap:Print()
+	local out = ""
+	for i = 1, #self do
+		out = out .. tostring(self[i]) .. " "
+	end
+	print(out)
+end
 
-return heap
+function Heap:Size()
+	return #self
+end
 
-------------------------------------------------------------------------------
+function Heap:Clone()
+	local newHeap = Heap.new(self.Compare)
+	for i = 1, #self do
+		table.insert(newHeap, self[i])
+	end
+	return newHeap
+end
+
+-- Functions that are not self-referential
+function Heap:Heapify(oldTable, comparator)
+	local newHeap = Heap.new(comparator)
+	for i = #oldTable, 1, -1 do
+		newHeap:Insert(oldTable[i])
+		table.remove(oldTable, i)
+	end
+	return newHeap
+end
+
+function Heap:Meld(heap1, heap2, comparator)
+	if not comparator then
+		comparator = heap1.Compare or heap2.Compare
+	end
+	local newHeap = Heap.new(comparator)
+	for i = #heap1, 1, -1 do
+		newHeap:Insert(heap1[i])
+	end
+	for i = #heap2, 1, -1 do
+		newHeap:Insert(heap2[i])
+	end
+	return newHeap
+end
+
+return Heap
