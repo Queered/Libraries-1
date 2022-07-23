@@ -447,7 +447,7 @@ button.lookFilled-yCfaCM {
     margin: 0;
     padding: 7px 12px;
     padding-left: 12px;
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 0 4px 4px 4px;
     position: relative;
     overflow: visible;
 }
