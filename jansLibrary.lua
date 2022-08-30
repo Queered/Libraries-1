@@ -1,4 +1,4 @@
-local args = table.pack(...)
+local args = table.pack(...)[1]
 local library = {
     title = args.title or "Window",
     foldername = args.foldername or "UILibrary",
