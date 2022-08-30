@@ -8,7 +8,7 @@ function TaskHandler.new(signal, callback)
             self._waiting = false;
             return coroutine.resume(self._thread, ...);
         end
-        return callback(...);
+        return callback(self, ...);
     end);
     return self;
 end
@@ -19,8 +19,8 @@ function TaskHandler:Wait()
     return coroutine.yield();
 end
 
-function TaskHandler:Defer(callback)
-    return callback(self:Wait());
+function TaskHandler:Defer(callback, ...)
+    return self:Wait() and callback(...);
 end
 
 function TaskHandler:Cancel()
