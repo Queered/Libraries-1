@@ -1,5 +1,5 @@
 local library = {
-    title,foldername,fileext,gamename,version = ...
+    title,foldername,fileext,gamename,version = ...,
     tabSize = 0,
     maxSpots = 10,
     draggable = true,
