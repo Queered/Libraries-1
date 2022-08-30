@@ -1,5 +1,10 @@
+local args = table.pack(...)
 local library = {
-    title,foldername,fileext,gamename,version = ...,
+    title = args.title or "Window",
+    foldername = args.foldername or "UILibrary",
+    fileext = args.fileext or ".json",
+    gamename = args.gamename or "universal",
+    version = args.version or "1.0",
     tabSize = 0,
     maxSpots = 10,
     draggable = true,
