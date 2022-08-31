@@ -1,4 +1,4 @@
-local args = table.pack(...)[1]
+local args = table.pack(...)[1] or {}
 local library = {
     title = args.title or "Window",
     foldername = args.foldername or "UILibrary",
@@ -850,7 +850,7 @@ local function createToggle(option, parent)
             BackgroundTransparency = 1,
             Image = "rbxassetid://3570695787",
             ImageColor3 = library.flags["Menu Accent Color"],
-            Visible = option.state,
+            Visible = false,
             Parent = tickbox
         })
         library:Create("ImageLabel", {
@@ -873,7 +873,7 @@ local function createToggle(option, parent)
         })
         tickboxOverlay = library:Create("ImageLabel", {
             Size = UDim2.new(1, 0, 1, 0),
-            BackgroundTransparency = option.state and 1 or 0,
+            BackgroundTransparency = 0,
             BackgroundColor3 = Color3.fromRGB(50, 50, 50),
             BorderColor3 = Color3.new(),
             Image = "rbxassetid://4155801252",
@@ -913,7 +913,7 @@ local function createToggle(option, parent)
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundTransparency = 1,
         Text = option.text,
-        TextColor3 =  option.state and Color3.fromRGB(210, 210, 210) or Color3.fromRGB(180, 180, 180),
+        TextColor3 = Color3.fromRGB(180, 180, 180),
         TextSize = 15,
         Font = Enum.Font.Code,
         TextXAlignment = Enum.TextXAlignment.Left,
@@ -972,13 +972,11 @@ local function createToggle(option, parent)
             self.callback(state)
         end
     end
-    if option.state then
-        task.delay(1, function()
-            if library then
-                option.callback(true)
-            end
-        end)
-    end
+    task.delay(1, function()
+        if library then
+            option:SetState(option.state)
+        end
+    end)
     setmetatable(option, {
         __newindex = function(t, i, v)
             if i == "Text" then
