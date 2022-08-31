@@ -348,7 +348,7 @@ function library:Notification(option)
     option.label = self:Create("TextLabel", {
         Parent = option.main,
         BackgroundTransparency = 1,
-        Position = EmptyUDim2,
+        Position = UDim2.new(),
         Size = UDim2.new(0, 0, 0, 20),
         Font = Enum.Font.Code,
         ZIndex = 6,
@@ -800,7 +800,7 @@ local function createDivider(option, parent)
                     option.main.Size = UDim2.new(1, 0, 0, 18)
                 else
                     option.title.Text = ""
-                    option.title.Size = EmptyUDim2
+                    option.title.Size = UDim2.new()
                     option.main.Size = UDim2.new(1, 0, 0, 6)
                 end
             end
@@ -808,7 +808,6 @@ local function createDivider(option, parent)
     })
     option.Text = option.text
 end
-
 local function createToggle(option, parent)
     option.hasInit = true
     option.main = library:Create("Frame", {
