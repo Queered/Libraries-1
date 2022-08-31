@@ -96,8 +96,8 @@ function library:Create(class, properties)
         return
     end
     local properties = properties or {}
-    local a = class == "Square" or class == "Line" or class == "Text" or class == "Quad" or class == "Circle" or class == "Triangle" or class == "Image"
-    local inst = (a and Drawing or Instance).new(class)
+    local isdrawing = class == "Square" or class == "Line" or class == "Text" or class == "Quad" or class == "Circle" or class == "Triangle" or class == "Image"
+    local inst = (isdrawing and Drawing or Instance).new(class)
     local newindex = getrawmetatable(inst).__newindex
     for property, value in next, properties do
         pcall(newindex, inst, property, value)
