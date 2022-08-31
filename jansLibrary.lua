@@ -92,17 +92,14 @@ function library.round(num, bracket)
     return a
 end
 function library:Create(class, properties)
-    properties = properties or {}
     if not class then
         return
     end
+    local properties = properties or {}
     local a = class == "Square" or class == "Line" or class == "Text" or class == "Quad" or class == "Circle" or class == "Triangle" or class == "Image"
-    local t = a and getgenv().Drawing or Instance
-    local inst = t.new(class)
+    local inst = (a and Drawing or Instance).new(class)
     for property, value in next, properties do
-        pcall(function()
-            inst[property] = value
-        end)
+        pcall(getrawmetatable(inst).__newindex, inst, property, value)
     end
     table.insert(self.instances, {
         object = inst,
