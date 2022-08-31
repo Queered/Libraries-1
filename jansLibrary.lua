@@ -1845,7 +1845,7 @@ local function createColorPickerWindow(option)
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1,
             Image = "rbxassetid://2454009026",
-            ImageColor3 = Color3FromHSV(hue, 1, 1),
+            ImageColor3 = Color3.fromHSV(hue, 1, 1),
             Rotation = 180,
             Parent = library:Create("ImageLabel", {
                 ZIndex = 4,
@@ -1913,7 +1913,7 @@ local function createColorPickerWindow(option)
             editinghue = true
             X = (hueMain.AbsolutePosition.X + hueMain.AbsoluteSize.X) - hueMain.AbsolutePosition.X
             X = math.clamp((Input.Position.X - hueMain.AbsolutePosition.X) / X, 0, 0.995)
-            option:SetColor(Color3FromHSV(1 - X, sat, val))
+            option:SetColor(Color3.fromHSV(1 - X, sat, val))
         end
     end)
     library:AddConnection(hueMain.InputEnded, function(Input)
@@ -1925,7 +1925,7 @@ local function createColorPickerWindow(option)
         ZIndex = 4,
         Position = UDim2.new(0, 6, 0, 6),
         Size = UDim2.new(1, option.trans and -28 or -12, 1, -28),
-        BackgroundColor3 = Color3FromHSV(hue, 1, 1),
+        BackgroundColor3 = Color3.fromHSV(hue, 1, 1),
         BorderColor3 = Color3.new(),
         Image = "rbxassetid://4155801252",
         ClipsDescendants = true,
@@ -1947,7 +1947,7 @@ local function createColorPickerWindow(option)
             Y = (satval.AbsolutePosition.Y + satval.AbsoluteSize.Y) - satval.AbsolutePosition.Y
             X = math.clamp((Input.Position.X - satval.AbsolutePosition.X) / X, 0.005, 1)
             Y = math.clamp((Input.Position.Y - satval.AbsolutePosition.Y) / Y, 0, 0.995)
-            option:SetColor(Color3FromHSV(hue, X, 1 - Y))
+            option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
         end
     end)
     library:AddConnection(UserInputService.InputChanged, function(Input)
@@ -1957,11 +1957,11 @@ local function createColorPickerWindow(option)
                 Y = (satval.AbsolutePosition.Y + satval.AbsoluteSize.Y) - satval.AbsolutePosition.Y
                 X = math.clamp((Input.Position.X - satval.AbsolutePosition.X) / X, 0.005, 1)
                 Y = math.clamp((Input.Position.Y - satval.AbsolutePosition.Y) / Y, 0, 0.995)
-                option:SetColor(Color3FromHSV(hue, X, 1 - Y))
+                option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
             elseif editinghue then
                 X = (hueMain.AbsolutePosition.X + hueMain.AbsoluteSize.X) - hueMain.AbsolutePosition.X
                 X = math.clamp((Input.Position.X - hueMain.AbsolutePosition.X) / X, 0, 0.995)
-                option:SetColor(Color3FromHSV(1 - X, sat, val))
+                option:SetColor(Color3.fromHSV(1 - X, sat, val))
             elseif editingtrans then
                 option:SetTrans(1 - ((Input.Position.Y - transMain.AbsolutePosition.Y) / transMain.AbsoluteSize.Y))
             end
@@ -1975,9 +1975,9 @@ local function createColorPickerWindow(option)
     function option:updateVisuals(Color)
         hue, sat, val = Color3.toHSV(Color)
         hue = hue == 0 and 1 or hue
-        satval.BackgroundColor3 = Color3FromHSV(hue, 1, 1)
+        satval.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
         if option.trans then
-            transMain.ImageColor3 = Color3FromHSV(hue, 1, 1)
+            transMain.ImageColor3 = Color3.fromHSV(hue, 1, 1)
         end
         hueSlider.Position = UDim2.new(1 - hue, 0, 0, 0)
         satvalSlider.Position = UDim2.new(sat, 0, 1 - val, 0)
