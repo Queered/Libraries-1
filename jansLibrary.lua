@@ -300,7 +300,7 @@ function library:Notification(option)
     end
     local Spot
     repeat 
-        wait()
+        task.wait()
         for i = 1, #spots do
             if spots[i] == false then
                 Spot = i
@@ -386,14 +386,14 @@ function library:Notification(option)
     TweenService:Create(option.topline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, textSize.X + 6, 0, 1) }):Play()
     TweenService:Create(option.outline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, textSize.X + 8, 0, 22) }):Play()
     TweenService:Create(option.blackoutline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, textSize.X + 10, 0, 24) }):Play()
-    delay(option.time, function() 
+    task.delay(option.time, function()
         TweenService:Create(option.main, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 20) }):Play()
         TweenService:Create(option.label, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 20), TextTransparency = 1, TextSize = 0 }):Play()
         TweenService:Create(option.top, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 1) }):Play()
         TweenService:Create(option.topline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 1) }):Play()
         TweenService:Create(option.outline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 22) }):Play()
         TweenService:Create(option.blackoutline, TweenInfo.new(option.popuptime), { Size = UDim2.new(0, 0, 0, 24) }):Play()
-        wait(option.popuptime)
+        task.wait(option.popuptime)
         table.remove(self.notifications, table.find(self.notifications, option))
         spots[Spot] = false
     end)
@@ -975,7 +975,7 @@ local function createToggle(option, parent)
         end
     end
     if option.state then
-        delay(1, function()
+        task.delay(1, function()
             if library then
                 option.callback(true)
             end
@@ -1345,7 +1345,7 @@ local function createSlider(option, parent)
             self.callback(value, reachedEnd)
         end
     end
-    delay(1, function()
+    task.delay(1, function()
         if library then
             option:SetValue(option.value)
         end
@@ -1655,7 +1655,7 @@ local function createList(option, parent)
             self.callback(self.value)
         end
     end
-    delay(1, function()
+    task.delay(1, function()
         if library then
             option:SetValue(option.value)
         end
@@ -1796,7 +1796,7 @@ local function createBox(option, parent)
         inputvalue.Text = self.value
         self.callback(value, enter)
     end
-    delay(1, function()
+    task.delay(1, function()
         if library then
             option:SetValue(option.value)
         end
@@ -2122,7 +2122,7 @@ local function createColor(option, parent)
         end
         option:SetTrans(option.trans)
     end
-    delay(1, function()
+    task.delay(1, function()
         if library then
             option:SetColor(option.color)
         end
@@ -2441,11 +2441,11 @@ function library:AddTab(title, pos)
                     spawn(function() 
                         repeat
                             playerThumbnails.head[plr] = Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
-                            wait()
+                            task.wait()
                         until playerThumbnails.head[plr]
                         repeat
                             playerThumbnails.bust[plr] = Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.AvatarBust, Enum.ThumbnailSize.Size100x100)
-                            wait()
+                            task.wait()
                         until playerThumbnails.bust[plr]
                         local main = library:Create("Frame", {
                             Position = UDim2.new(0, 6, 0, 2),
@@ -3234,7 +3234,7 @@ function library:AddWarning(warning)
         warning.main.Visible = true
         warning.message.Text = warning.text
         repeat
-            wait()
+            task.wait()
         until answer ~= nil
         spawn(warning.Close)
         library.warning = nil
@@ -3418,7 +3418,7 @@ function library:Init()
     end
     spawn(function()
         while library do
-            wait(1)
+            task.wait(1)
             if self.options["Config List"] then
                 local Configs = self:GetConfigs()
                 for _, config in next, Configs do
