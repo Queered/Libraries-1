@@ -1,4 +1,4 @@
-local args = table.pack(...)[1]
+local args = table.pack(...)
 local library = {
     title = args.title or "Window",
     foldername = args.foldername or "UILibrary",
@@ -29,7 +29,6 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local defaultState = UserInputService.OverrideMouseIconBehavior
 local imageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" }
 local dragging, dragInput, dragStart, startPos, dragObject
 local blacklistedKeys = { --add or remove keys if you find the need to
@@ -112,7 +111,6 @@ function library:AddConnection(connection, name, callback)
     return connection
 end
 function library:Unload()
-    UserInputService.OverrideMouseIconBehavior = defaultState
     for a, c in next, self.connections do
         c:Disconnect()
         self.connections[a] = nil
@@ -3332,13 +3330,6 @@ function library:Init()
         BackgroundTransparency = 1,
         Parent = self.main
     })
-    self.cursor = self:Create("Image", {
-        Data = game:HttpGet("https://tr.rbxcdn.com/af687e4d6fd32296a8da20edf7abdd84/420/420/Decal/Png"),
-        Size = Vector2.new(64, 64),
-        Visible = UserInputService.MouseEnabled,
-        Rounding = 0,
-        Position = UserInputService:GetMouseLocation()
-    })
     self.tooltip = self:Create("TextLabel", {
         ZIndex = 2,
         BackgroundTransparency = 1,
@@ -3462,14 +3453,6 @@ function library:Init()
     end)
     self:AddConnection(UserInputService.InputChanged, function(input)
         if input.UserInputType.Name == "MouseMovement" then
-            if self.cursor then
-                local mousePos = UserInputService:GetMouseLocation()
-                local left, right = self.main.AbsolutePosition.X - 2, self.main.AbsolutePosition.X + self.main.AbsoluteSize.X + 2
-                local top, bottom = self.main.AbsolutePosition.Y + 35, self.main.AbsolutePosition.Y + self.main.AbsoluteSize.Y + 37
-                self.cursor.Visible = self.open and mousePos.X > left and mousePos.X < right and mousePos.Y > top and mousePos.Y < bottom
-                self.cursor.Position = mousePos
-                UserInputService.OverrideMouseIconBehavior = self.cursor.Visible and Enum.OverrideMouseIconBehavior.ForceHide or defaultState
-            end
             if self.slider then
                 self.slider:SetValue(self.slider.min + ((input.Position.X - self.slider.slider.AbsolutePosition.X) / self.slider.slider.AbsoluteSize.X) * (self.slider.max - self.slider.min))
             end
