@@ -29,8 +29,8 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local workspace = game:GetService("Workspace")
-local camera = workspace.CurrentCamera
+local Workspace = game:GetService("Workspace")
+local camera = Workspace.CurrentCamera
 local imageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" }
 local dragging, dragInput, dragObject, dragOffset
 local blacklistedKeys = { --add or remove keys if you find the need to
@@ -2258,16 +2258,6 @@ function library:AddTab(title, pos)
                 Parent = self.content2,
                 Visible = false
             })
-            createButton({
-                text = "Votekick",
-                flag = "Votekick",
-                canInit = true,
-                callback = function() 
-                    if self.selectedPlayer then
-                        Modules.network:send("modcmd", "/votekick:" .. self.selectedPlayer.Name .. ":hacking")
-                    end
-                end
-            }, self.votekick)
             self.prioritize = library:Create("Frame", {
                 Position = UDim2.new(0, 0, 1, -27),
                 Size = UDim2.new(0, 117, 0, 26),
@@ -2318,37 +2308,6 @@ function library:AddTab(title, pos)
                 Parent = self.content2,
                 Visible = false
             })
-            createButton({
-                text = "Spectate",
-                flag = "Spectate",
-                canInit = true,
-                callback = function() 
-                    if self.selectedPlayer then
-                        if not self.spectatingPlayer then
-                            self.spectatingPlayer = self.selectedPlayer
-                        end
-                        if (Modules.hud:isplayeralive(self.selectedPlayer)) then
-                            if (self.spectatingPlayer == self.selectedPlayer) then
-                                if (Modules.char.alive) then
-                                    Modules.camera:setfirstpersoncam()
-                                else
-                                    Modules.camera:setmenucam(Workspace.MenuLobby)
-                                end
-                                self.spectatingPlayer = LocalPlayer
-                            else
-                                Modules.camera:setspectate(self.selectedPlayer)
-                                self.spectatingPlayer = self.selectedPlayer
-                            end
-                        else
-                            if (Modules.char.alive) then
-                                Modules.camera:setfirstpersoncam()
-                            else
-                                Modules.camera:setmenucam(Workspace.MenuLobby)
-                            end
-                        end
-                    end
-                end
-            }, self.spectate)
             self.tpto = library:Create("Frame", {
                 Position = UDim2.new(0, 224, 1, -27),
                 Size = UDim2.new(0, 117, 0, 26),
@@ -2357,16 +2316,6 @@ function library:AddTab(title, pos)
                 Parent = self.content2,
                 Visible = false
             })
-            createButton({
-                text = "Teleport To",
-                flag = "Teleport To",
-                canInit = true,
-                callback = function() 
-                    if self.selectedPlayer and Modules.char.alive and Modules.hud:isplayeralive(self.selectedPlayer) then
-                        Modules.TeleportToPlayer(Modules.chars[self.selectedPlayer])
-                    end
-                end
-            }, self.tpto)
             self.copyuid = library:Create("Frame", {
                 Position = UDim2.new(0, 224, 1, -52),
                 Size = UDim2.new(0, 117, 0, 26),
