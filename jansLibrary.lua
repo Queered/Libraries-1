@@ -98,8 +98,9 @@ function library:Create(class, properties)
     local properties = properties or {}
     local a = class == "Square" or class == "Line" or class == "Text" or class == "Quad" or class == "Circle" or class == "Triangle" or class == "Image"
     local inst = (a and Drawing or Instance).new(class)
+    local newindex = getrawmetatable(inst).__newindex
     for property, value in next, properties do
-        pcall(getrawmetatable(inst).__newindex, inst, property, value)
+        pcall(newindex, inst, property, value)
     end
     table.insert(self.instances, {
         object = inst,
