@@ -49,15 +49,15 @@ local whitelistedMouseinputs = { --add or remove mouse inputs if you find the ne
     Enum.UserInputType.MouseButton3
 }
 --Functions
-library.udim2ToVector2 = function(value)
+function library.udim2ToVector2(value)
 	local x = camera.ViewportSize.X * value.X.Scale + value.X.Offset
 	local y = camera.ViewportSize.Y * value.Y.Scale + value.Y.Offset
 	return Vector2.new(x,y)
 end
-library.vector2ToUDim2 = function(value)
+function library.vector2ToUDim2(value)
 	return UDim2.fromOffset(value.X, value.Y)
 end
-library.converttotime = function(secs)
+function library.converttotime(secs)
     secs = math.floor(secs)
     local mins = (secs - secs%60)/60
     secs = secs - mins*60
@@ -75,7 +75,7 @@ library.converttotime = function(secs)
     text = text .. string.format("%02i", mins) .. ":" .. string.format("%02i", secs)
     return text
 end
-library.round = function(num, bracket)
+function library.round(num, bracket)
     bracket = bracket or 1
     local a
     if typeof(num) == "Vector2" then
