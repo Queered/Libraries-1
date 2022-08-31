@@ -29,8 +29,10 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
+local workspace = game:GetService("Workspace")
+local camera = workspace.CurrentCamera
 local imageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" }
-local dragging, dragInput, dragStart, startPos, dragObject
+local dragging, dragInput, dragObject, dragOffset
 local blacklistedKeys = { --add or remove keys if you find the need to
     Enum.KeyCode.Unknown,
     Enum.KeyCode.W,
@@ -47,6 +49,14 @@ local whitelistedMouseinputs = { --add or remove mouse inputs if you find the ne
     Enum.UserInputType.MouseButton3
 }
 --Functions
+library.udim2ToVector2 = function(value)
+	local x = camera.ViewportSize.X * value.X.Scale + value.X.Offset
+	local y = camera.ViewportSize.Y * value.Y.Scale + value.Y.Offset
+	return Vector2.new(x,y)
+end
+library.vector2ToUDim2 = function(value)
+	return UDim2.fromOffset(value.X, value.Y)
+end
 library.converttotime = function(secs)
     secs = math.floor(secs)
     local mins = (secs - secs%60)/60
@@ -3369,22 +3379,21 @@ function library:Init()
     library:AddConnection(self.mainTop.InputBegan, function(input)
         if input.UserInputType.Name == "MouseButton1" then
             dragObject = self.main
+            dragOffset = self.udim2ToVector2(dragObject.Position) - UserInputService:GetMouseLocation()
             dragging = true
-            dragStart = input.Position
-            startPos = dragObject.Position
             if library.popup then
                 library.popup:Close()
             end
         end
     end)
-    library:AddConnection(self.mainTop.InputChanged, function(input)
-        if dragging and input.UserInputType.Name == "MouseMovement" then
-            dragInput = input
-        end
-    end)
-    library:AddConnection(self.mainTop.InputEnded, function(input)
+    library:AddConnection(UserInputService.InputEnded, function(input)
         if input.UserInputType.Name == "MouseButton1" then
             dragging = false
+        end
+    end)
+    library:AddConnection(UserInputService.InputChanged, function(input)
+        if dragging and input.UserInputType.Name == "MouseMovement" then
+            dragInput = input
         end
     end)
     function self:selectTab(tab)
@@ -3457,10 +3466,8 @@ function library:Init()
                 self.slider:SetValue(self.slider.min + ((input.Position.X - self.slider.slider.AbsolutePosition.X) / self.slider.slider.AbsoluteSize.X) * (self.slider.max - self.slider.min))
             end
         end
-        if self.open and input == dragInput and dragging and library.draggable then
-            local delta = input.Position - dragStart
-            local yPos = (startPos.Y.Offset + delta.Y) < -36 and -36 or startPos.Y.Offset + delta.Y
-            dragObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, yPos)
+        if self.open and input == dragInput and dragging and self.draggable then
+            dragObject.Position = self.vector2ToUDim2(UserInputService:GetMouseLocation() + dragOffset)
         end
     end)
     self:Close()
