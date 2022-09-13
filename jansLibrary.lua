@@ -1281,6 +1281,7 @@ local function createSlider(option, parent)
         end
         manualInput = false
     end)
+
     local interest = (option.sub or option.textpos) and option.slider or option.main
     library:AddConnection(interest.InputBegan, function(input)
         if input.UserInputType.Name == "MouseButton1" then
@@ -1312,12 +1313,19 @@ local function createSlider(option, parent)
         end
     end)
     library:AddConnection(interest.InputEnded, function(input)
-        if input.UserInputType.Name == "MouseMovement" then
+        if input.UserInputType.Name == "MouseButton1" then
             library.tooltip.Position = UDim2.new(2)
+            library.slider = nil
             if option ~= library.slider then
                 option.slider.BorderColor3 = Color3.new()
                     --option.fill.BorderColor3 = Color3.new()
             end
+        end
+    end)
+    library:AddConnection(RunService.RenderStepped, function()
+        if library.slider then
+            local position = UserInputService:GetMouseLocation()
+            option:SetValue(option.min + ((position.X - option.slider.AbsolutePosition.X) / option.slider.AbsoluteSize.X) * (option.max - option.min))
         end
     end)
     function option:SetValue(value, nocallback)
@@ -1952,7 +1960,7 @@ local function createColorPickerWindow(option)
             option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
         end
     end)
-    library:AddConnection(UserInputService.InputChanged, function(Input)
+    library:AddConnection(satval.InputChanged, function(Input)
         if Input.UserInputType.Name == "MouseMovement" then
             if editingsatval then
                 X = (satval.AbsolutePosition.X + satval.AbsoluteSize.X) - satval.AbsolutePosition.X
@@ -3323,15 +3331,20 @@ function library:Init()
         SliceCenter = Rect.new(2, 2, 62, 62),
         Parent = self.main
     })
-    library:AddConnection(self.main.MouseButton1Down, function()
-        dragOffset = self.udim2ToVector2(self.main.Position) - UserInputService:GetMouseLocation()
-        dragging = true
-        if library.popup then
-            library.popup:Close()
+    library:AddConnection(self.mainTop.InputBegan, function(input, processed)
+        if not processed and input.UserInputType.Name == "MouseButton1" then
+            dragging = true
+            dragOffset = self.udim2ToVector2(self.main.Position) - UserInputService:GetMouseLocation()
+            if library.popup then
+                library.popup:Close()
+            end
         end
     end)
-    library:AddConnection(self.main.MouseButton1Up, function()
-        dragging = false
+    library:AddConnection(self.mainTop.InputEnded, function(input)
+        if input.UserInputType.Name == "MouseButton1" then
+            dragging = false
+            dragOffset = nil
+        end
     end)
     library:AddConnection(RunService.RenderStepped, function()
         if dragging and dragOffset then
@@ -3396,18 +3409,6 @@ function library:Init()
             self:selectTab(tab)
         end
     end
-    self:AddConnection(UserInputService.InputEnded, function(input)
-        if input.UserInputType.Name == "MouseButton1" and self.slider then
-            self.slider.slider.BorderColor3 = Color3.new()
-            self.slider = nil
-        end
-    end)
-    self:AddConnection(RunService.RenderStepped, function()
-        if self.slider then
-            local position = UserInputService:GetMouseLocation()
-            self.slider:SetValue(self.slider.min + ((position.X - self.slider.slider.AbsolutePosition.X) / self.slider.slider.AbsoluteSize.X) * (self.slider.max - self.slider.min))
-        end
-    end)
     self:Close()
 end
 return library
