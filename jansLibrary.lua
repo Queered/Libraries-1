@@ -23,6 +23,7 @@ local library = {
     }
 }
 --Locals
+local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TextService = game:GetService("TextService")
 local HttpService = game:GetService("HttpService")
@@ -1953,28 +1954,23 @@ local function createColorPickerWindow(option)
     library:AddConnection(satval.InputBegan, function(Input)
         if Input.UserInputType.Name == "MouseButton1" then
             editingsatval = true
-            X = (satval.AbsolutePosition.X + satval.AbsoluteSize.X) - satval.AbsolutePosition.X
-            Y = (satval.AbsolutePosition.Y + satval.AbsoluteSize.Y) - satval.AbsolutePosition.Y
-            X = math.clamp((Input.Position.X - satval.AbsolutePosition.X) / X, 0.005, 1)
-            Y = math.clamp((Input.Position.Y - satval.AbsolutePosition.Y) / Y, 0, 0.995)
+            X = math.clamp((Input.Position.X - satval.AbsolutePosition.X) / satval.AbsoluteSize.X, 0.005, 1)
+            Y = math.clamp((Input.Position.Y - satval.AbsolutePosition.Y) / satval.AbsoluteSize.Y, 0, 0.995)
             option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
         end
     end)
-    library:AddConnection(satval.InputChanged, function(Input)
-        if Input.UserInputType.Name == "MouseMovement" then
-            if editingsatval then
-                X = (satval.AbsolutePosition.X + satval.AbsoluteSize.X) - satval.AbsolutePosition.X
-                Y = (satval.AbsolutePosition.Y + satval.AbsoluteSize.Y) - satval.AbsolutePosition.Y
-                X = math.clamp((Input.Position.X - satval.AbsolutePosition.X) / X, 0.005, 1)
-                Y = math.clamp((Input.Position.Y - satval.AbsolutePosition.Y) / Y, 0, 0.995)
-                option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
-            elseif editinghue then
-                X = (hueMain.AbsolutePosition.X + hueMain.AbsoluteSize.X) - hueMain.AbsolutePosition.X
-                X = math.clamp((Input.Position.X - hueMain.AbsolutePosition.X) / X, 0, 0.995)
-                option:SetColor(Color3.fromHSV(1 - X, sat, val))
-            elseif editingtrans then
-                option:SetTrans(1 - ((Input.Position.Y - transMain.AbsolutePosition.Y) / transMain.AbsoluteSize.Y))
-            end
+    library:AddConnection(RunService.RenderStepped, function()
+        local mouse = Players.LocalPlayer:GetMouse()
+        if editingsatval then
+            X = math.clamp((mouse.X - satval.AbsolutePosition.X) / satval.AbsoluteSize.X, 0.005, 1)
+            Y = math.clamp((mouse.Y - satval.AbsolutePosition.Y) / satval.AbsoluteSize.Y, 0, 0.995)
+            option:SetColor(Color3.fromHSV(hue, X, 1 - Y))
+        elseif editinghue then
+            X = (hueMain.AbsolutePosition.X + hueMain.AbsoluteSize.X) - hueMain.AbsolutePosition.X
+            X = math.clamp((mouse.X - hueMain.AbsolutePosition.X) / X, 0, 0.995)
+            option:SetColor(Color3.fromHSV(1 - X, sat, val))
+        elseif editingtrans then
+            option:SetTrans(1 - ((mouse.Y - transMain.AbsolutePosition.Y) / transMain.AbsoluteSize.Y))
         end
     end)
     library:AddConnection(satval.InputEnded, function(Input)
