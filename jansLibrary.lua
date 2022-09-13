@@ -1323,7 +1323,7 @@ local function createSlider(option, parent)
         end
     end)
     library:AddConnection(RunService.RenderStepped, function()
-        if library.slider then
+        if library.slider == option then
             local position = UserInputService:GetMouseLocation()
             option:SetValue(option.min + ((position.X - option.slider.AbsolutePosition.X) / option.slider.AbsoluteSize.X) * (option.max - option.min))
         end
