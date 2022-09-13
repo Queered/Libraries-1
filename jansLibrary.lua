@@ -3402,9 +3402,10 @@ function library:Init()
             self.slider = nil
         end
     end)
-    self:AddConnection(RunService.RenderStepped, function(input)
+    self:AddConnection(RunService.RenderStepped, function()
         if self.slider then
-            self.slider:SetValue(self.slider.min + ((input.Position.X - self.slider.slider.AbsolutePosition.X) / self.slider.slider.AbsoluteSize.X) * (self.slider.max - self.slider.min))
+            local position = UserInputService:GetMouseLocation()
+            self.slider:SetValue(self.slider.min + ((position.X - self.slider.slider.AbsolutePosition.X) / self.slider.slider.AbsoluteSize.X) * (self.slider.max - self.slider.min))
         end
     end)
     self:Close()
