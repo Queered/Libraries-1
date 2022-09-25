@@ -25,7 +25,7 @@ function Heap:Push(value)
     table.insert(self._heap, idx, value);
 end
 
-function Heap:Peak(idx)
+function Heap:Peek(idx)
     return rawget(self._heap, idx);
 end
 
