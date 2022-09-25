@@ -23,6 +23,7 @@ function Heap:Push(value)
         end
     end
     table.insert(self._heap, idx, value);
+    return idx;
 end
 
 function Heap:Peek(idx)
