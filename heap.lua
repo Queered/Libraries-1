@@ -3,7 +3,7 @@ Heap.__index = Heap;
 
 function Heap.new(compare, size)
     return setmetatable({
-        _values = table.create(size or 0),
+        _heap = table.create(size or 0),
         _compare = compare or function(a, b)
             return a > b;
         end
@@ -11,26 +11,26 @@ function Heap.new(compare, size)
 end
 
 function Heap:Pop()
-    return table.remove(self._values, 1);
+    return table.remove(self._heap, 1);
 end
 
 function Heap:Push(value)
     local idx = 1;
-    for i, v in next, self._values do
+    for i, v in next, self._heap do
         if self._compare(v, value) then
             idx = i;
             break;
         end
     end
-    table.insert(self._values, idx, value);
+    table.insert(self._heap, idx, value);
 end
 
 function Heap:Peak(idx)
-    return rawget(self._values, idx);
+    return rawget(self._heap, idx);
 end
 
 function Heap:Size()
-    return rawlen(self._values);
+    return rawlen(self._heap);
 end
 
 return Heap;
