@@ -27,11 +27,11 @@ function Heap:Push(value)
 end
 
 function Heap:Peek(idx)
-    return self._heap[idx];
+    return rawget(self._heap, idx);
 end
 
 function Heap:Size()
-    return #self._heap;
+    return rawlen(self._heap);
 end
 
 return Heap;
