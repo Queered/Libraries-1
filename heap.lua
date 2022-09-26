@@ -10,8 +10,8 @@ function Heap.new(compare, size)
     }, Heap);
 end
 
-function Heap:Pop()
-    return table.remove(self._heap, 1);
+function Heap:Pop(idx)
+    return table.remove(self._heap, idx or 1);
 end
 
 function Heap:Push(value)
