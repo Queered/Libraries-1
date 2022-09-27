@@ -1135,9 +1135,9 @@ local function createBind(option, parent)
                     option.callback(library.flags[option.flag], 0)
                 else
                     library.flags[option.flag] = true
+                    option.callback(true, 0)
                     if Loop then
                         Loop:Disconnect()
-                        option.callback(true, 0)
                     end
                     Loop = library:AddConnection(RunService.RenderStepped, function(step)
                         if not UserInputService:GetFocusedTextBox() then
@@ -1316,10 +1316,11 @@ local function createSlider(option, parent)
     library:AddConnection(interest.InputEnded, function(input)
         if input.UserInputType.Name == "MouseButton1" then
             library.tooltip.Position = UDim2.new(2)
-            library.slider = nil
             if option ~= library.slider then
                 option.slider.BorderColor3 = Color3.new()
                     --option.fill.BorderColor3 = Color3.new()
+            else
+                library.slider = nil
             end
         end
     end)
