@@ -1,9 +1,9 @@
 local Heap = {};
 Heap.__index = Heap;
 
-function Heap.new(compare, min_size)
+function Heap.new(compare, size)
     return setmetatable({
-        _heap = table.create(min_size or 0),
+        _heap = table.create(size or 0),
         _compare = compare or function(a, b)
             return a > b;
         end
