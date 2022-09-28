@@ -10,6 +10,7 @@ function Heap.new(compare, size)
     }, Heap);
 end
 
+-- todo: table.find method
 function Heap:Pop(idx)
     return table.remove(self._heap, idx or 1);
 end
