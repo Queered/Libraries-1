@@ -4,8 +4,8 @@ Heap.__index = Heap;
 function Heap.new(compare, size)
     return setmetatable({
         _heap = table.create(size or 0),
-        _compare = compare or function(a, b)
-            return a > b;
+        _compare = compare or function(v0, v1)
+            return v0 > v1;
         end
     }, Heap);
 end
