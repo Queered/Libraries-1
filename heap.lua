@@ -15,15 +15,12 @@ function Heap:Pop(idx)
 end
 
 function Heap:Push(value)
-    local idx = 1;
     for i, v in next, self._heap do
         if self._compare(v, value) then
-            idx = i;
-            break;
+            table.insert(self._heap, i, value);
+            return i;
         end
     end
-    table.insert(self._heap, idx, value);
-    return idx;
 end
 
 function Heap:Peek(idx)
