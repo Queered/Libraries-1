@@ -17,13 +17,13 @@ end
 function Heap:Push(value)
     local heap = self._heap;
     local compare = self._compare;
-
     for i = 1, #heap do
         if compare(heap[i], value) then
             table.insert(heap, i, value);
             return i;
         end
     end
+    return 1;
 end
 
 function Heap:Peek(idx)
