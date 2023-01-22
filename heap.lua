@@ -15,8 +15,8 @@ function Heap:Pop(idx)
 end
 
 function Heap:Push(value)
-    for i, v in next, self._heap do
-        if self._compare(v, value) then
+    for i = 1, #self._heap do
+        if self._compare(self._heap[i], value) then
             table.insert(self._heap, i, value);
             return i;
         end
