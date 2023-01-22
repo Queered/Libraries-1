@@ -10,10 +10,6 @@ function Heap.new(compare, size)
     }, Heap);
 end
 
-function Heap:Pop(idx)
-    return table.remove(self._heap, idx or 1);
-end
-
 function Heap:Push(value)
     local idx = 1;
     for i = 1, #self._heap do
@@ -25,6 +21,10 @@ function Heap:Push(value)
     
     table.insert(self._heap, idx, value);
     return idx;
+end
+
+function Heap:Pop(idx)
+    return table.remove(self._heap, idx or 1);
 end
 
 function Heap:Peek(idx)
