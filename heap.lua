@@ -23,7 +23,6 @@ function Heap:Push(value)
             return i;
         end
     end
-    return 1;
 end
 
 function Heap:Peek(idx)
