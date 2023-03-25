@@ -1,6 +1,6 @@
 local Heap = {};
 
-function Heap.new(size, compare)
+function Heap.new(size: string, compare: (any, any) -> boolean)
     return setmetatable({
         _heap = table.create(size or 0),
         _compare = compare or function(v0, v1)
@@ -9,7 +9,7 @@ function Heap.new(size, compare)
     }, { __index = Heap });
 end
 
-function Heap:Push(value)
+function Heap:Push(value: any)
     local idx;
     for i = 1, self:Size() do
         if self._compare(self:Peek(i), value) then
@@ -20,15 +20,15 @@ function Heap:Push(value)
     table.insert(self._heap, select(idx and 1 or 2, idx, value));
 end
 
-function Heap:Pop(idx)
+function Heap:Pop(idx: number): any
     return table.remove(self._heap, idx or 1);
 end
 
-function Heap:Peek(idx)
+function Heap:Peek(idx: number): any
     return self._heap[idx or 1];
 end
 
-function Heap:Size()
+function Heap:Size(): number
     return #self._heap;
 end
 
