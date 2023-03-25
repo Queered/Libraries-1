@@ -10,14 +10,13 @@ function Heap.new(size, compare)
 end
 
 function Heap:Push(value)
-    local idx = nil;
-    for i = 1, self:Size() do
-        if self._compare(self:Peek(i), value) then
-            idx = i;
-            break;
+    for idx = 1, self:Size() do
+        if self._compare(self:Peek(idx), value) then
+            table.insert(self._heap, idx, value);
+            return;
         end
     end
-    table.insert(self._heap, select(idx and 1 or 2, idx, value));
+    table.insert(self._heap, value);
 end
 
 function Heap:Pop(idx)
