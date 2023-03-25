@@ -1,6 +1,6 @@
 local Heap = {};
 
-function Heap.new(compare, size)
+function Heap.new(size, compare)
     return setmetatable({
         _heap = table.create(size or 0),
         _compare = compare or function(v0, v1)
@@ -10,7 +10,7 @@ function Heap.new(compare, size)
 end
 
 function Heap:Push(value)
-    local idx = nil;
+    local idx;
     for i = 1, self:Size() do
         if self._compare(self:Peek(i), value) then
             idx = i;
