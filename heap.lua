@@ -1,5 +1,4 @@
 local Heap = {};
-Heap.__index = Heap;
 
 function Heap.new(compare, size)
     return setmetatable({
@@ -7,7 +6,7 @@ function Heap.new(compare, size)
         _compare = compare or function(v0, v1)
             return v0 > v1;
         end
-    }, Heap);
+    }, { __index = Heap });
 end
 
 function Heap:Push(value)
