@@ -17,7 +17,7 @@ function Heap:Push(value)
             break;
         end
     end
-    return table.insert(self._heap, select(idx and 1 or 2, idx, value));
+    table.insert(self._heap, select(idx and 1 or 2, idx, value));
 end
 
 function Heap:Pop(idx)
