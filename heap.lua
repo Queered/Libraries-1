@@ -25,7 +25,7 @@ function Heap:Pop(idx)
 end
 
 function Heap:Peek(idx)
-    return self._heap[idx];
+    return self._heap[idx or 1];
 end
 
 function Heap:Size()
