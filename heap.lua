@@ -5,22 +5,20 @@ function Heap.new(compare, size)
     return setmetatable({
         _heap = table.create(size or 0),
         _compare = compare or function(v0, v1)
-            return v0 < v1;
+            return v0 > v1;
         end
     }, Heap);
 end
 
 function Heap:Push(value)
-    local idx = 1;
-    for i = 1, #self._heap do
-        if self._compare(self._heap[i], value) then
+    local idx;
+    for i = 1, self:Size() do
+        if self._compare(self:Peek(i), value) then
             idx = i;
             break;
         end
     end
-    
-    table.insert(self._heap, idx, value);
-    return idx;
+    return table.insert(self._heap, select(idx and 1 or 2, idx, value));
 end
 
 function Heap:Pop(idx)
