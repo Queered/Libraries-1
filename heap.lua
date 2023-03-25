@@ -10,7 +10,7 @@ function Heap.new(compare, size)
 end
 
 function Heap:Push(value)
-    local idx;
+    local idx = nil;
     for i = 1, self:Size() do
         if self._compare(self:Peek(i), value) then
             idx = i;
