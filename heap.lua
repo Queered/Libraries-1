@@ -1,4 +1,5 @@
 -- Custom heap implementation specifically made and optimised for LuaU
+-- Will NOT work with regular lua!
 local Heap = {};
 
 function Heap.new(size, compare)
