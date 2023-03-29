@@ -5,9 +5,7 @@ local Heap = {};
 function Heap.new(size, compare)
     return setmetatable({
         _heap = table.create(size or 0),
-        _compare = compare or function(v0, v1)
-            return v0 > v1;
-        end
+        _compare = compare or function(v0, v1) return v0 > v1; end
     }, { __index = Heap });
 end
 
