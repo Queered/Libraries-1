@@ -1,4 +1,4 @@
--- Custom sorted array implementation specifically made and optimised for LuaU
+-- Sorted array implementation specifically made and optimised for LuaU
 local SortedArray = {};
 
 function SortedArray.new(size, compare)
