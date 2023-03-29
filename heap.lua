@@ -9,7 +9,7 @@ function Heap.new(size, compare)
 end
 
 function Heap:Push(value)
-    for idx, item in self._heap do
+    for idx, item in ipairs(self._heap) do
         if self._compare(item, value) then
             table.insert(self._heap, idx, value);
             return;
