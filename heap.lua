@@ -1,4 +1,4 @@
--- Heap library specifically made and optimised for LuaU
+-- Custom heap implementation specifically made and optimised for LuaU
 local Heap = {};
 
 function Heap.new(size, compare)
