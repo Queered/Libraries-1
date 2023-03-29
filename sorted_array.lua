@@ -18,11 +18,11 @@ function SortedArray:Push(value: any)
     table.insert(self._array, value);
 end
 
-function SortedArray:Pop(idx: number?): any | nil
+function SortedArray:Pop(idx: number?): any?
     return table.remove(self._array, idx or 1);
 end
 
-function SortedArray:Peek(idx: number?): any | nil
+function SortedArray:Peek(idx: number?): any?
     return self._array[idx or 1];
 end
 
