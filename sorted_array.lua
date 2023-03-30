@@ -11,12 +11,10 @@ end
 function SortedArray:Push(value: any): number
     for idx, item in ipairs(self._array) do
         if self._compare(item, value) then
-            table.insert(self._array, idx, value);
-            return idx;
+            return table.insert(self._array, idx, value) and idx;
         end
     end
-    table.insert(self._array, value);
-    return self:Size();
+    return table.insert(self._array, value) and self:Size();
 end
 
 function SortedArray:Pop(idx: number?): any?
