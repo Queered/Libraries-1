@@ -1,4 +1,4 @@
--- Sorted array implementation specifically made and optimised for LuaU
+-- Specifically made and optimised for LuaU (https://luau-lang.org/demo)
 local SortedArray = {};
 
 function SortedArray.new(size: number?, compare: ((a: any, b: any) -> boolean)?)
