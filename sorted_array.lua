@@ -8,14 +8,15 @@ function SortedArray.new(size: number?, compare: ((a: any, b: any) -> boolean)?)
     }, { __index = SortedArray });
 end
 
-function SortedArray:Push(value: any)
+function SortedArray:Push(value: any): number
     for idx, item in ipairs(self._array) do
         if self._compare(item, value) then
             table.insert(self._array, idx, value);
-            return;
+            return idx;
         end
     end
     table.insert(self._array, value);
+    return self:Size();
 end
 
 function SortedArray:Pop(idx: number?): any?
