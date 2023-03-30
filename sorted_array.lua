@@ -9,6 +9,7 @@ function SortedArray.new(size: number?, compare: ((a: any, b: any) -> boolean)?)
 end
 
 function SortedArray:Push(value: any): number
+    assert(value, "Missing argument #1");
     for idx, item in ipairs(self._array) do
         if self._compare(item, value) then
             return table.insert(self._array, idx, value) or idx;
